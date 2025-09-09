@@ -1,0 +1,1 @@
+// For now we don't have to do anything with Birthday request.
