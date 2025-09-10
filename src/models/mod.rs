@@ -1,4 +1,3 @@
-// Entity modules
 pub mod entities {
   pub mod people;
   pub mod cities;
@@ -9,18 +8,17 @@ pub mod entities {
 
 // Request modules
 pub mod requests {
-    pub mod people;
-    pub mod cities;
-    
-    pub use people::*;
-    pub use cities::*;
+  pub mod people;
+  pub mod cities;
+  
+  pub use cities::*;
 }
 
 // Response modules  
 pub mod responses {
-    pub mod birthday;
-    pub mod cities;
-    
-    pub use birthday::*;
-    pub use cities::*;
+  pub mod birthday;
+  pub mod cities;
+  pub mod people;
+  
+  pub use cities::*;
 }

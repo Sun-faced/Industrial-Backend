@@ -1,36 +1,51 @@
-use serde::{Deserialize};
+use serde::Deserialize;
+use uuid::Uuid;
 
 #[derive(Deserialize, Clone, Debug)]
 pub struct CreateCityRequest {
   pub name: String,
-  state_province: Option<String>,
-  country: String,
-  latitude: f64,
-  longitude: f64,
+  pub state_province: Option<String>,
+  pub country: String,
+  pub latitude: f64,
+  pub longitude: f64,
 }
 
 impl CreateCityRequest {
   fn is_lat_valid(&self) -> bool {
-    return self.latitude <= 90.0 && self.latitude >= -90.0
+    self.latitude <= 90.0 && self.latitude >= -90.0
   }
 
   fn is_lon_valid(&self) -> bool {
-    return self.longitude <= 180.0 && self.longitude >= -180.0
+    self.longitude <= 180.0 && self.longitude >= -180.0
   }
 
-  pub fn validate(&self) -> Result<bool, String> {
+  pub fn validate(&self) -> Result<(), String> {
     if self.name.trim().is_empty() {
-      return Err("Name can't be empty".to_string())
+      return Err("Name can't be empty".to_string());
     }
 
     if self.country.trim().is_empty() {
-      return Err("Country can't be empty".to_string())
+      return Err("Country can't be empty".to_string());
     }
 
-    if (!self.is_lat_valid()) || (!self.is_lon_valid()) {
-      return Err("Wrong coordinates".to_string())
+    if !self.is_lat_valid() || !self.is_lon_valid() {
+      return Err("Wrong coordinates".to_string());
     }
 
-    Ok(true)
+    Ok(())
   }
+}
+
+#[derive(Deserialize)]
+pub struct DeleteCityRequst {
+  id: Uuid,
+  name: String,
+}
+
+impl DeleteCityRequst {
+    pub fn validate(&self) -> Result<(), String> {
+      println!("{} ", self.id);
+      println!("{} ", self.name);
+      Ok(())
+    }
 }

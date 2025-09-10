@@ -1,6 +1,6 @@
-use serde::{self, Serialize};
+use serde::{self, Deserialize, Serialize};
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct GetBirthdayResponse {
   pub name: String,
   pub full_city_name: String,

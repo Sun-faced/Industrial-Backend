@@ -1,19 +1,23 @@
-use serde::{Deserialize};
+use serde::Deserialize;
 use uuid::Uuid;
 use chrono::NaiveDate;
 
 #[derive(Deserialize, Clone, Debug)]
-pub struct CreatePersonRequest {
-  id: Uuid,
-  name: String,
-  city_id: Uuid,
-  date_of_birth: NaiveDate,
+pub struct RegisterUserRequest {
+  pub name: String,
+  pub student_id: String,
+  pub city_id: Uuid,
+  pub date_of_birth: NaiveDate,
 }
 
-impl CreatePersonRequest {
-  pub fn validate(&self) -> Result<(), String>{
+impl RegisterUserRequest {
+  pub fn validate(&self) -> Result<(), String> {
     if self.name.trim().is_empty() {
       return Err("Name cannot be empty".to_string());
+    }
+
+    if self.student_id.trim().is_empty() {
+      return Err("Student ID cannot be empty".to_string());
     }
 
     let today = chrono::Utc::now().naive_utc().date();
