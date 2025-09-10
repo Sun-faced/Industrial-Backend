@@ -44,7 +44,6 @@ pub async fn register_user(Json(request): Json<RegisterUserRequest>) -> Result<(
 
       let user_id = person.id;
       
-      // Store user
       let mut users = USERS.lock().unwrap();
       users.insert(user_id, person);
       drop(users);
