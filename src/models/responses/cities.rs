@@ -1,9 +1,8 @@
 use serde::{self, Serialize, Deserialize};
-use uuid::Uuid;
 
 #[derive(Serialize, Deserialize)]
 pub struct GetCities {
-  pub id: Uuid,
+  pub id: i32,
   pub full_city_name: String,
 }
 

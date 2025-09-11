@@ -1,17 +1,16 @@
 use serde::{self, Serialize, Deserialize};
-use uuid::Uuid;
 use chrono::{NaiveDate, Datelike};
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Person {
-  pub id: Uuid,
+  pub id: i32,
   pub name: String,
   pub birth_date: NaiveDate,
-  pub city_id: Uuid,
+  pub city_id: i32,
 }
 
 impl Person {
-  pub fn new(id: Uuid, name: String, birth_date: NaiveDate, city_id: Uuid) -> Self {
+  pub fn new(id: i32, name: String, birth_date: NaiveDate, city_id: i32) -> Self {
     Self {
       id,
       name,

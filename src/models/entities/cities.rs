@@ -1,36 +1,30 @@
-use serde::{self, Serialize, Deserialize};
-use uuid::Uuid;
+use diesel::prelude::*;
+use crate::schema::city;
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct City {
-  pub id: Uuid,
+#[derive(Queryable, Insertable, Selectable, Debug, Clone)]
+#[diesel(table_name = city)]
+pub struct CityDb {
+  pub city_id: i32,
   pub name: String,
   pub country: String,
-  pub state_province: Option<String>,
-  pub latitude: f64,
+  pub state: Option<String>,
   pub longitude: f64,
+  pub latitude: f64,
 }
 
-impl City {
-  pub fn new(
-    name: String,
-    country: String, 
-    state_province: Option<String>,
-    latitude: f64, 
-    longitude: f64,
-  ) -> Self {
-    Self {
-      id: Uuid::new_v4(),
-      name,
-      country,
-      state_province,
-      latitude,
-      longitude,
-    }
-  }
+#[derive(Insertable)]
+#[diesel(table_name = city)]
+pub struct NewCity {
+  pub name: String,
+  pub country: String,
+  pub state: Option<String>,
+  pub longitude: f64,
+  pub latitude: f64,
+}
 
+impl CityDb {
   pub fn full_name(&self) -> String {
-    match &self.state_province {
+    match &self.state {
       Some(state) => format!("{}, {}, {}", self.name, state, self.country),
       None => format!("{}, {}", self.name, self.country),
     }

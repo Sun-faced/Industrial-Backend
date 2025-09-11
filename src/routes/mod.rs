@@ -1,10 +1,14 @@
+use std::sync::Arc;
+
 use axum::{Router, routing::{get, post, delete}};
+
+use crate::services::DbPool;
 
 mod cities;
 mod users;
 mod birthdays;
 
-pub fn create_routes() -> Router {
+pub fn create_routes() -> Router<Arc<DbPool>> {
   Router::new()
     // Root route
     .route("/", get(|| async { "Planet Birthday API - v1.0" }))
@@ -19,5 +23,5 @@ pub fn create_routes() -> Router {
     .route("/api/users/{id}", delete(users::delete_user))
       
     // Birthday routes
-    .route("/api/birthdays/today", get(birthdays::get_todays_birthdays))
+    .route("/api/birthdays/today", get(|| async { "SOON IMPLEMENTED" }))
 }

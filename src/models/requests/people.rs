@@ -1,12 +1,11 @@
 use serde::Deserialize;
-use uuid::Uuid;
 use chrono::NaiveDate;
 
 #[derive(Deserialize, Clone, Debug)]
 pub struct RegisterUserRequest {
   pub name: String,
   pub student_id: String,
-  pub city_id: Uuid,
+  pub city_id: i32,
   pub date_of_birth: NaiveDate,
 }
 

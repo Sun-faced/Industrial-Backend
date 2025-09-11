@@ -1,5 +1,4 @@
 use serde::Deserialize;
-use uuid::Uuid;
 
 #[derive(Deserialize, Clone, Debug)]
 pub struct CreateCityRequest {
@@ -38,8 +37,8 @@ impl CreateCityRequest {
 
 #[derive(Deserialize)]
 pub struct DeleteCityRequst {
-  id: Uuid,
-  name: String,
+  pub id: i32,
+  pub name: String,
 }
 
 impl DeleteCityRequst {

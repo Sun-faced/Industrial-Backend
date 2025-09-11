@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
 
 #[derive(Serialize, Deserialize)]
 pub struct DeletePersonResponse {
@@ -11,5 +10,5 @@ pub struct DeletePersonResponse {
 pub struct RegisterUserResponse {
   pub success: bool,
   pub message: String,
-  pub user_id: Option<Uuid>,
+  pub user_id: Option<i32>,
 }

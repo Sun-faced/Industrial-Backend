@@ -1,5 +1,4 @@
 use axum::{Json, http::StatusCode, extract::Path};
-use uuid::Uuid;
 use crate::models::requests::people::RegisterUserRequest;
 use crate::models::responses::people::{RegisterUserResponse, DeletePersonResponse};
 
@@ -9,7 +8,7 @@ use std::collections::HashMap;
 use crate::models::entities::Person;
 
 lazy_static::lazy_static! {
-  static ref USERS: Arc<Mutex<HashMap<Uuid, Person>>> = Arc::new(Mutex::new(HashMap::new()));
+  static ref USERS: Arc<Mutex<HashMap<i32, Person>>> = Arc::new(Mutex::new(HashMap::new()));
   static ref STUDENT_IDS: Arc<Mutex<Vec<String>>> = Arc::new(Mutex::new(vec![
     "STU001".to_string(),
     "STU002".to_string(), 
@@ -36,7 +35,7 @@ pub async fn register_user(Json(request): Json<RegisterUserRequest>) -> Result<(
       drop(student_ids);
 
       let person = Person::new(
-        Uuid::new_v4(),
+        1,
         request.name.clone(),
         request.date_of_birth,
         request.city_id
@@ -70,7 +69,7 @@ pub async fn register_user(Json(request): Json<RegisterUserRequest>) -> Result<(
   }
 }
 
-pub async fn delete_user(Path(user_id): Path<Uuid>) -> Result<(StatusCode, Json<DeletePersonResponse>), StatusCode> {
+pub async fn delete_user(Path(user_id): Path<i32>) -> Result<(StatusCode, Json<DeletePersonResponse>), StatusCode> {
   let mut users = USERS.lock().unwrap();
   
   match users.remove(&user_id) {
