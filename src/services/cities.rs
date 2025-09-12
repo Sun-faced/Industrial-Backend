@@ -1,6 +1,7 @@
 use diesel::prelude::*;
 use std::sync::Arc;
 
+use crate::models::requests::DeleteCityRequst;
 use crate::services::DbPool;
 use crate::schema::city::dsl::*;
 use crate::models::entities::cities::{CityDb, NewCity};
@@ -68,7 +69,6 @@ pub async fn delete_city_by_id(
     pool: Arc<DbPool>, 
     given_city_id: i32
 ) -> Result<bool, CityServiceError> {
-  use crate::schema::city::dsl::*;
   
   let mut conn = pool.get().map_err(|_| CityServiceError::DatabaseError)?;
   
@@ -79,6 +79,26 @@ pub async fn delete_city_by_id(
     Ok(rows_deleted) => Ok(rows_deleted > 0),
     Err(_) => Err(CityServiceError::DatabaseError),
   }
+}
+
+pub async fn check_delete_request(
+    pool: Arc<DbPool>,
+    city_request: &DeleteCityRequst
+) -> Result<bool, CityServiceError> {
+  let mut conn = pool.get().map_err(|_| CityServiceError::DatabaseError)?;
+  
+  // Check if a city exists with both the given ID and name
+  let city_exists = city
+    .filter(city_id.eq(city_request.id))
+    .filter(name.eq(&city_request.name))
+    .select(city_id)
+    .first::<i32>(&mut conn);
+  
+  match city_exists {
+      Ok(_) => Ok(true),
+      Err(diesel::NotFound) => Ok(false),
+      Err(_) => Err(CityServiceError::DatabaseError),
+    }
 }
 
 pub async fn get_city_by_id(pool: Arc<DbPool>, city_id_param: i32) -> Result<CityDb, CityServiceError> {

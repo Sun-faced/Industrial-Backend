@@ -1,9 +1,6 @@
 pub mod entities {
   pub mod people;
   pub mod cities;
-  
-  pub use people::*;
-  pub use cities::*;
 }
 
 // Request modules

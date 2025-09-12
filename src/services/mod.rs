@@ -4,7 +4,7 @@ use diesel::PgConnection;
 use dotenvy::dotenv;
 
 pub mod cities;
-pub mod birthdays;
+pub mod people;
 
 pub type DbPool = Pool<ConnectionManager<PgConnection>>;
 

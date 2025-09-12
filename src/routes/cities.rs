@@ -11,15 +11,12 @@ use crate::models::requests::cities::CreateCityRequest;
 use crate::models::responses::DeleteCityResponse;
 
 pub async fn get_cities(State(pool): State<Arc<DbPool>>) -> Result<Json<Vec<GetCities>>, StatusCode> {
-  println!("🔍 Route: get_cities called");
   
   match city_service::get_all_cities(pool).await {
     Ok(cities) => {
-      println!("✅ Route: Service returned {} cities", cities.len());
       Ok(Json(cities))
     },
     Err(e) => {
-      println!("❌ Route: Service failed with error: {:?}", e);
       Err(StatusCode::INTERNAL_SERVER_ERROR)
     },
   }
@@ -29,17 +26,16 @@ pub async fn create_city(
     State(pool): State<Arc<DbPool>>,
     Json(city_request): Json<CreateCityRequest>
 ) -> Result<(StatusCode, Json<CreateCityResponse>), StatusCode> {
-    // Validate the request
-    if let Err(error) = city_request.validate() {
-      return Ok((
-        StatusCode::BAD_REQUEST,
-        Json(CreateCityResponse {
-          success: false,
-          message: error,
-          city: None,
-        })
-      ));
-    }
+  if let Err(error) = city_request.validate() {
+    return Ok((
+      StatusCode::BAD_REQUEST,
+      Json(CreateCityResponse {
+        success: false,
+        message: error,
+        city: None,
+      })
+    ));
+  }
 
   match city_service::create_new_city(pool, city_request).await {
     Ok(response) => Ok((StatusCode::CREATED, Json(response))),
@@ -66,7 +62,7 @@ pub async fn delete_city(
     State(pool): State<Arc<DbPool>>,
     Json(delete_request): Json<DeleteCityRequst>
 ) -> Result<(StatusCode, Json<DeleteCityResponse>), StatusCode> {
-  if let Err(error) = delete_request.validate() {
+  if let Err(error) = delete_request.validate(pool.clone()).await {
     return Ok((
       StatusCode::BAD_REQUEST,
       Json(DeleteCityResponse {

@@ -1,4 +1,8 @@
+use std::sync::Arc;
+
 use serde::Deserialize;
+use crate::services::DbPool;
+use crate::services::cities::{check_delete_request, CityServiceError};
 
 #[derive(Deserialize, Clone, Debug)]
 pub struct CreateCityRequest {
@@ -42,9 +46,20 @@ pub struct DeleteCityRequst {
 }
 
 impl DeleteCityRequst {
-    pub fn validate(&self) -> Result<(), String> {
-      println!("{} ", self.id);
-      println!("{} ", self.name);
-      Ok(())
+    pub async fn validate(&self, pool: Arc<DbPool>) -> Result<(), String> {
+      if self.name.trim().is_empty() {
+        return Err("City name cannot be empty".to_string());
+      }
+      
+      if self.id <= 0 {
+          return Err("City ID must be a positive number".to_string());
+      }
+      
+      match check_delete_request(pool, self).await {
+        Ok(true) => Ok(()),
+        Ok(false) => Err("City not found with the provided ID and name".to_string()),
+        Err(CityServiceError::DatabaseError) => Err("Database error occurred".to_string()),
+        Err(CityServiceError::NotFound) => Err("City not found".to_string()),
+      }
     }
 }
